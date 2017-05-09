@@ -380,7 +380,7 @@ With linear output units the network can only learn linear functions.
 
 <section style="text-align: left;">
 <p>Extending it to multiple layers</p>
-<img class="plain"  src="/images/BackProp.png" width="30%" height="30%" align="right"/>
+<img class="plain"  src="/images/Backprop.png" width="30%" height="30%" align="right"/>
 Forward pass:
 <small>
      <ul style="width: 60%; list-style: none;">
