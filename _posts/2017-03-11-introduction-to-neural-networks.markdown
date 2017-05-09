@@ -11,13 +11,12 @@ categories: introduction neural networks
 <section style="text-align: left;">
 <p>
 Artificial neural networks (ANN) are biologically inspired learning systems.  They rely on large networks of units to learn complex behavior. </p>
-<img class="plain"  src="/images/ExampleNN.png" width="30%" height="30%" style="float: right"/>
-     <ul style="width: 60%;"> <small>
-            <li><p>Input units represent text, image or any input. </p> </li>
-            <li> <p>Output units represent discrete or real valued output. </p> </li> 
-	    <li><p>The strength of connections between units is represented by <b> weights </b>.</p> </li> 
+<img class="plain"  src="/images/ExampleNN.png" width="50%" height="50%" style="float: right"/>
+     <ul style="width: 40%;"> <small>
+            <li><p>Input units $x$ represent text, image or any input. </p> </li>
+            <li> <p>Output units $o$ represent discrete or real valued output. </p> </li> 
+	    <li><p>The strength of connections between units is represented by weights $w$. </p> </li> 
 	    <li><p>Output units usually compute a weighted sum of inputs.</p> </li>  
- 
 	     </small>
         </ul>
 </section>
@@ -31,7 +30,7 @@ The earliest definition of an  neural network dates back to 1943 (McCullogh and 
 	    <li><p>Each output unit (O) has a fixed threshold $\theta$ </p> </li> 
 	    <li><p>Excitatory units (A or B) all have the same positive weight to the output unit. </p> </li>
 	    <li><p>Inhibitory units (C) have the same negative weight to the output unit. </p> </li>
-	    <li><p>An output unit (C) emits 1 if the sum of excitatory inputs is greater than threshold AND there is no inhibition. </p></li></small>
+	    <li><p>An output unit (O) emits 1 if the sum of all inputs multiplied by their weights is greater than threshold. </p></li></small>
         </ul>
 </section>
 
@@ -154,8 +153,9 @@ Rosenblatt injected learning into these systems in his 1958 paper and called thi
 <img class="plain"  src="/images/Perceptron.png" width="35%" height="35%" align="right"/>
      <ul style="width: 60%; list-style: none;">
       <li>The $\sum$ unit computed the sum as before. $\sum_{i=1}^{n}w_{i}x_{i}$</li>
-      <li> Alternatively in vector notation, $\sum$ unit computes $w  \boldsymbol{\cdot} x$.</li>
+      <li> In vector notation, $\sum$ unit computes $w  \boldsymbol{\cdot} x$.</li>
       <p>
+      <li> The threshold is a function such that: </li>
       <li> $o = \begin{cases} 1 & \text{if $\sum_{i=1}^{n}w_{i}x_{i}>0$} \\ -1 & \text{otherwise}\end{cases}$</li> </p>
       <li> Most importantly, weights were learned for different problems.</li>
 </ul>
@@ -164,15 +164,26 @@ Rosenblatt injected learning into these systems in his 1958 paper and called thi
 <section  style="text-align: left;">
 <p>Perceptron training rule</p>
      <ul style="list-style: none;">
-            <li>$w_{i} \leftarrow w_{i} + \Delta w_{i}$ </li>
+           <li> A new weight $w_{i}'$ is computed by: </li>
+            <li>$w_{i}'= w_{i} + \Delta w_{i}$ </li>
 	    <li>where</li>
 	    <li>$\Delta w_{i} = \eta(t-o)x_{i}$ </li>
      </ul>
      <p> Where </p>
      <ul>
-	<li> $t$ is the expected target value for $x_{i}$</li>
-	<li> $o$ is the perceptron output for $x_{i}$. </li>
+	<li> $t$ is the expected target value for a given input example $x$</li>
+	<li> $o$ is the perceptron output for the example. </li>
 	<li> $\eta$ is a parameter called the learning rate. </li>
+     </ul>
+</section>
+
+<section  style="text-align: left;">
+<p>Perceptron training rule continued</p>
+     <ul>
+           <li> Note that this operation of adjusting the weight by computing $w_{i}'$ is performed for each $x_{i}.$</li>
+            <li>The output $o$ is then computed again.</li>
+	    <li>If the weights need to be adjusted again, they will be with computed with the new value of $o$. </li>
+	    <li>The system iterates till no weight changes need to be made. </li>
      </ul>
 </section>
 
@@ -196,14 +207,15 @@ Rosenblatt injected learning into these systems in his 1958 paper and called thi
 <p>Perceptron training rule will converge if</p>
      <ul style="list-style: none;">
             <li>Training data are linearly separable. </li>
-	    <li>$\eta$ is sufficiently small.</li>
+	    <li>$\eta$ is sufficiently small, so the system does not oscillate. </li>
+	    <li>But the perceptron training rule will not converge if the training inputs are not linearly separable </li>
      </ul>
 <img class="plain"  src="/images/LinearSeparable.png" width="70%" height="70%"/>
      
 </section>
 
 <section  style="text-align: left;">
-<p>Delta rule</p>
+<p>Delta rule - a better rule for data that is not linearly separable</p>
 
 <div id="container" style="width:100%;">  
 <div id="right" style="float:right; width:50%;text-align:center;">   
@@ -286,18 +298,18 @@ The delta rule looks exactly like the perceptron rule, but there are actually so
 <section  style="text-align: left;">
 <p>Delta rule and Linear Regression</p>
 <ul style="list-style: none;">
-	    <li> What we have discussed so far is exactly the same as linear regression.  In linear regression, for a given example $d$ in $D$, $$ \hat{y}=\sum_{j=1}^{k} x_{dj} \theta_{j} $$ 
+	    <li> What we have discussed so far is exactly the same as linear regression.  In linear regression, for a given example $d$ in $D$, $$ \hat{y}=\sum_{j=1}^{k} x_{dj} w_{j} $$ 
 	    </li>
-	    <li> $$ \hat{y} = x_{d1}\theta_{1} + x_{d2}\theta_{2} + ... x_{dk}\theta_{k}$$ </li> 
-	    <li> $\theta_{1}$ is just the bias term with $x_{d1}$ set to 1. </li>
+	    <li> $$ \hat{y} = x_{d1} w_{0} + x_{d2} w_{1} + ... x_{dk} w_{k}$$ </li> 
+	    <li> $w_{0}$ is just the bias term with $x_{d1}$ set to 1. </li>
 </ul>
 </section>
 
 <section  style="text-align: left;">
 <p>Delta rule and Linear Regression</p>
 <ul>
-	    <li> $k$ is the number of dimensions which in a neural network maps to the number of hidden units. </li>
-	    <li> $\theta_{1}...\theta_{k}$ are parameters which are weights for each hidden unit.</li>
+	    <li> $k$ is the number of dimensions which in a neural network maps to the number of weights connecting to $o$. </li>
+	    <li> $w_{0}...w_{k}$ are parameters we try to find.</li>
 	    <li> $\hat{y}$ corresponds to the output of a single output unit which was $o$ </li>
 	    <li> In linear regression, as in neural nets, the error function that is minimized is $E = \frac{1}{2}\sum_{d \in D}(t - \hat{y})^2$. </li>
      </ul>
@@ -353,21 +365,36 @@ With linear output units the network can only learn linear functions.
 </section>
 
 <section style="text-align: left;">
+<p>MultiLayeredPerceptrons - Extending neural nets to multiple layers</p>
+<img class="plain"  src="/images/MLP.png" width="30%" height="30%" align="right"/>
+     In reality neural networks have multiple layers.
+     <ul style="width: 60%;">
+     <small>
+	    <li> Each intermediate layer is called a hidden layer.  </li>
+	    <li> Hidden layers each introduce nonlinearity into the system, and hence increase the expressivity of the model.  </li>
+	    <li> This is key because if a system had multiple layers of linear units, then the model is still linear and hence not very expressive. </li>
+</small>
+</ul>
+</section>
+
+
+<section style="text-align: left;">
 <p>Extending it to multiple layers</p>
 <img class="plain"  src="/images/BackProp.png" width="30%" height="30%" align="right"/>
-     Forward pass:
-     <ul style="width: 60%; list-style: none;"><small>
+Forward pass:
+<small>
+     <ul style="width: 60%; list-style: none;">
 	    <li>$$net_{h1}=0.35 + .15 * .05 + .25 * .1$$
 	    $$=.378$$ </li>
 	    <li>$$o_{h1}=\frac{1}{1 + e^{-net_{h1}}}$$
 	    $$=0.593$$</li>
 	    <li>$$net_{y1}=0.6 + .4 * .593 + .45 * .598$$
 	    $$o_{y1}=.751$$</li>
-	    <li>Assuming expected output at $y_{1}$ is .01, $E_{y1}=\frac{1}{2}(t - o_{y1})^2$.</li>
+	    <li>Assuming expected output at $y_{1}$ is .01, $$E_{y1}=\frac{1}{2}(t - o_{y1})^2$$.</li>
 	    <li> $=\frac{1}{2}(.01 - .751)^2 =.275$ </li>
 	    <li>$E_{y2}=.023$</li>
+</ul> 
 </small>
-</ul>
 </section>
 
 
@@ -444,18 +471,34 @@ $$ = \delta y1 \frac{\partial net_{y1}}{\partial o_{h1}} $$ </li>
 
 
 <section style="text-align: left;">
-<p>Layer wise back-propagation</p>
-<img class="plain"  src="/images/BackProp3.png" width="30%" height="30%" align="right"/>
-     Backward pass to adjust weights for $w_{x1h1}$:
-     <ul style="width: 60%; list-style: none;"><small>
-<li> Repeating this process for $y2$ yields: $\frac{\partial E_{y2}}{\partial o_{h1}} = -.019$ </li>
-<li> And $\frac{\partial E_{total}}{\partial o_{h1}} = .055 - .019 = .036$ </li>
-<li> Now that we have $\frac{\partial E_{total}}{\partial o_{h1}}$ we need to calculate $\frac{\partial o_{h1}}{\partial net_{h1}} \frac{\partial net_{h1}}{\partial w_{x1h1}}$ </li>
-<li>$\frac{\partial o_{h1}}{\partial net_{h1}} = o_{h1}*(1- o_{h1}) = .593 * (1 - .593) = .241$ </li>
-<li>Or $\delta h1 = .241 * .036 = .008 $ </li>
-<li>$$\frac{\partial E_{total}}{\partial w_{x1h1}} = \delta h1 * x1 $$ </li>
-<li>$$ = .008 * .05 = .0004$$ </li>
-<li> $$w_{x1h1} = w_{x1h1} - (\eta * .004) $$ </li>
-</small>
+<p>Modular view of back-propagation</p>
+<img class="plain"  src="/images/LayerwiseBackprop.png" width="50%" height="50%" align="right"/>
+     For each layer:
+     <ul style="width: 40%;"><small>
+     <li> Compute the $\frac{\partial E}{\partial w_{i}}$ for each $w_{i}$ connected to this layer.</li>
+<p>     <li>Compute the $\frac{\partial E}{\partial x_{i}}$ for each of the input units connecting to this layer.  Note that $x_{i}$ is used here to just refer to the layer of input units that feed into the current layer. </li> </p></small>
 </ul>
 </section>
+
+<section style="text-align: left;">
+<p>Error functions for multi layered perceptrons</p>
+<img class="plain"  src="/images/locGlobMinim.png" width="50%" height="50%" align="right"/>
+<ul style="width: 40%;">
+<small>
+<li> Nonlinear MLPs have a complex error surface that is not a parabola. </li>
+<li> The error function is now a complex surface of peaks and valleys. </li>
+<li> Gradient descent can then end up in local minima rather than a global minima. </li> </small>
+</ul>
+</section>
+
+
+<section style="text-align: left;">
+<p>Stochastic gradient descent (SGD)</p>
+<img class="plain"  src="/images/LayerwiseBackprop.png" width="50%" height="50%" align="right"/>
+     For each layer:
+     <ul style="width: 40%;"><small>
+     <li> Compute the $\frac{\partial E}{\partial w_{i}}$ for each $w_{i}$ connected to this layer.</li>
+<p>     <li>Compute the $\frac{\partial E}{\partial x_{i}}$ for each of the input units connecting to this layer.  Note that $x_{i}$ is used here to just refer to the layer of input units that feed into the current layer. </li> </p></small>
+</ul>
+</section>
+
